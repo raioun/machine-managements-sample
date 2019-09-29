@@ -1,0 +1,64 @@
+<div>
+  <p>顧客企業名：<%= link_to @branch.company.name, company_path(@branch.company) %></p>
+</div>
+<div>
+  <p>所有営業所ID：<%= @branch.id %></p>
+</div>
+<div>
+  <p>所有営業所名：<%= @branch.name %></p>
+</div>
+<div>
+  <p>住所：<%= @branch.address %></p>
+</div>
+<div>
+  <%= link_to '編集', edit_branch_path(@branch), class: 'btn btn-warning' %>
+</div>
+<div class ="text-center">
+  <p><%= link_to '営業所一覧へ戻る', branches_path %></p>
+</div>
+<div class="text-center">
+  <h1>この営業所の機材一覧</h1>
+</div>
+<div class="text-center">
+  <h2>検索フォーム</h2>
+</div>
+
+<% if params[:rental_machine].nil? %>
+<%= selected = nil %>
+<%else %>
+<%= selected = params[:rental_machine][:status] %>
+<%end%>
+
+<div class="text-center">
+  <%= form_tag branch_path, :method => 'get' do |f| %>
+  
+    <div class="form-group">
+      <%= label :machine, '機材名' %>
+      <%= text_field_tag :machine, params[:machine] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :type1, '型式1' %>
+      <%= text_field_tag :type1, params[:type1] %>
+    </div>
+      
+    <div class="form-group">
+      <%= label :type2, '型式2' %>
+      <%= text_field_tag :type2, params[:type2] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :code, '機番' %>
+      <%= text_field_tag :code, params[:code] %>
+    </div>
+    
+    <div class="form-group">  
+      <%= label :status, '状態' %>
+      <%= select :rental_machine,:status, {良品: 0, 重整備: 1, 廃棄済み: 2},selected:  selected %>
+    </div>
+
+    <div><%= submit_tag '検索', :name => nil %></div>
+  <% end %>
+</div>
+
+<%= render 'rental_machines/rental_machines', rental_machines: @rental_machines %>

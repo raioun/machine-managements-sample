@@ -1,0 +1,26 @@
+<div class="text-center">
+  <h1>機材名検索フォーム</h1>
+</div>
+<div class="text-center">
+  <%= form_tag machines_path, :method => 'get' do |f| %>
+  
+    <div class="form-group">
+      <%= label :name, '機材名' %>
+      <%= text_field_tag :name, params[:name] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :type1, '型式1' %>
+      <%= text_field_tag :type1, params[:type1] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :type2, '型式2' %>
+      <%= text_field_tag :type2, params[:type2] %>
+    </div>
+    
+    <div><%= submit_tag '検索', :name => nil %></div>
+  <% end %>
+</div>
+
+<%= render 'machines', machines: @machines %>

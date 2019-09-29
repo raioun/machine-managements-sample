@@ -1,0 +1,13 @@
+<ul class="media-list">
+  <% customers.each do |customer| %>
+    <li class="media">
+      <div>
+        <p>顧客企業名：<%= customer.name %></p>
+      </div>
+      <div>
+        <%= link_to '詳細', customer_path(customer), class: 'btn btn-primary' %>
+      </div>
+    </li>
+  <% end %>
+  <%= paginate customers %>
+</ul>

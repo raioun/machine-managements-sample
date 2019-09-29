@@ -1,0 +1,48 @@
+<h1>案件ID：<%= @order.id %>の詳細ページ</h1>
+<div>
+  <p>状態：<%= @order.status %></p>
+</div>
+<div>
+  <p>出庫日時：<%= @order.out_date %>/<%= @order.out_time %></p>
+</div>
+<div>
+  <p>入庫日時：<%= @order.in_date %>/<%= @order.in_time %></p>
+</div>
+<div>
+  <p>応対者：<%= link_to @order.user.name, user_path(@order.user) %></p>
+</div>
+<div>
+  <p>顧客名：<%= link_to @order.project.customer.name, customer_path(@order.project.customer) %></p>
+</div>
+<div>
+  <p>現場名：<%= link_to @order.project.name, project_path(@order.project) %></p>
+</div>
+<div>
+  <p>発注者名：<%= link_to @order.orderer.family_name, orderer_path(@order.orderer) %><%= link_to @order.orderer.first_name, orderer_path(@order.orderer) %>/<%= @order.orderer.phone_number %></p>
+</div>
+<div>
+  <p>機材名：<%= link_to @order.rental_machine.machine.name, machine_path(@order.rental_machine.machine) %>/<%= link_to @order.rental_machine.machine.type1, machine_path(@order.rental_machine.machine) %>/<%= link_to @order.rental_machine.machine.type2, machine_path(@order.rental_machine.machine) %></p>
+</div>
+<div>
+  <p>機番：<%= link_to @order.rental_machine.code, rental_machine_path(@order.rental_machine) %></p>
+</div>
+<div>
+  <p>備考欄：<%= @order.remarks %></p>
+</div>
+<div>
+  <p>予約日時：<%= @order.created_at %></p>
+</div>
+<div>
+  <p>変更日時：<%= @order.updated_at %></p>
+</div>
+<div class="button-space">
+  <%= link_to '編集', edit_order_path(@order), class: 'btn btn-warning' %>
+</div>
+<div class="button-space">
+  <% if @order.status == '予約中' %>
+    <%= link_to "案件削除", @order, method: :delete, data: { confirm: '本当に削除してよろしいですか？' }, class:'btn btn-danger' %>
+  <% end %>
+</div>
+<div class ="text-center">
+  <p><%= link_to '案件一覧へ戻る', orders_path %></p>
+</div>

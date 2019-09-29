@@ -1,0 +1,62 @@
+<div class="text-center">
+  <h1>レンタル機材検索フォーム</h1>
+</div>
+
+<% if params[:rental].nil? %>
+<%= selected = nil %>
+<%else %>
+<%= selected = params[:rental][:status] %>
+<%end%>
+<div class="text-center">
+  <%= form_tag rental_machines_path, :method => 'get' do |f| %>
+  
+    <div class="form-group">
+      <%= label :machine, '機材名' %>
+      <%= text_field_tag :machine, params[:machine] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :type1, '型式1' %>
+      <%= text_field_tag :type1, params[:type1] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :type2, '型式2' %>
+      <%= text_field_tag :type2, params[:type2] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :code, '機番' %>
+      <%= text_field_tag :code, params[:code] %>
+    </div>
+
+    <div class="form-group">
+      <%= label :company, '所有企業名' %>
+      <%= text_field_tag :company, params[:company] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :branch, '所有営業所名' %>
+      <%= text_field_tag :branch, params[:branch] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :storage_company, '保管企業名' %>
+      <%= text_field_tag :storage_company, params[:storage_company] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :storage, '保管場所名' %>
+      <%= text_field_tag :storage, params[:storage] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :status, '状態' %>
+      <%= select :rental,:status, {良品: 0, 重整備: 1, 廃棄済み: 2},selected:  selected %>
+    </div>
+
+    <div><%= submit_tag '検索', :name => nil %></div>
+  <% end %>
+</div>
+<%# <% binding.pry %>
+<%= render 'rental_machines', rental_machines: @rental_machines %>

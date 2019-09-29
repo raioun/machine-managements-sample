@@ -1,0 +1,16 @@
+<ul class="media-list">
+  <% storages.each do |storage| %>
+    <li class="media">
+      <div>
+        <p>所有企業名：<%= storage.company.name %></p>
+      </div>
+      <div>
+        <p>所有営業所名：<%= storage.name %></p>
+      </div>
+      <div>
+        <%= link_to '詳細', storage_path(storage), class: 'btn btn-primary' %>
+      </div>
+    </li>
+  <% end %>
+  <%= paginate storages %>
+</ul>

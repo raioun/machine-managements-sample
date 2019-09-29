@@ -1,0 +1,31 @@
+<ul class="media-list">
+  <% orders.each do |order| %>
+    <li class="media">
+      <div>
+        <p>案件ID：<%= order.id %>/状態：<%= order.status %></p>
+      </div>
+      <div>
+        <p>出庫日時：<%= order.out_date %>/<%= order.out_time %>/入庫日時：<%= order.in_date %>/<%= order.in_time %></p>
+      </div>
+      <div>
+        <p>応対者：<%= link_to order.user.name, user_path(order.user) %></p>
+      </div>
+      <div>
+        <p>顧客名：<%= link_to order.project.customer.name, customer_path(order.project.customer) %>/現場名：<%= link_to order.project.name, project_path(order.project) %></p>
+      </div>
+      <div>
+        <p>機材名：<%= link_to order.rental_machine.machine.name, machine_path(order.rental_machine.machine) %>/<%= link_to order.rental_machine.machine.type1, machine_path(order.rental_machine.machine) %>/<%= link_to order.rental_machine.machine.type2, machine_path(order.rental_machine.machine) %></p>
+      </div>
+      <div>
+        <p>機番：<%= link_to order.rental_machine.code, rental_machine_path(order.rental_machine) %></p>
+      </div>
+      <div>
+        <p>備考欄：<%= order.remarks %></p>
+      </div>
+      <div>
+        <%= link_to '詳細', order_path(order), class: 'btn btn-primary' %>
+      </div>
+    </li>
+  <% end %>
+  <%= paginate orders %>
+</ul>

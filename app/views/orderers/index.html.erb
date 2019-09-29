@@ -1,0 +1,32 @@
+<div class="text-center">
+  <h1>発注者検索フォーム</h1>
+</div>
+
+<% if params[:orderer].nil? %>
+<%= selected = nil %>
+<%else %>
+<%= selected = params[:orderer][:status] %>
+<%end%>
+<div class="text-center">
+  <%= form_tag orderers_path, :method => 'get' do |f| %>
+  
+    <div class="form-group">
+      <%= label :customer, '顧客企業名' %>
+      <%= text_field_tag :customer, params[:customer] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :family_name, '発注者苗字' %>
+      <%= text_field_tag :family_name, params[:family_name] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :status, '状態' %>
+      <%= select :orderer,:status, {在籍中: 0, 退社済み: 1},selected:  selected %>
+    </div>
+    
+    <div><%= submit_tag "検索", :name => nil, :family_name => nil %></div>
+  <% end %>
+</div>
+
+<%= render 'orderers', orderers: @orderers %>

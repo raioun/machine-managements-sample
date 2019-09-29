@@ -1,0 +1,13 @@
+<ul class="media-list">
+  <% companies.each do |company| %>
+    <li class="media">
+      <div>
+        <p>所有企業名：<%= company.name %></p>
+      </div>
+      <div>
+        <%= link_to '詳細', company_path(company), class: 'btn btn-primary' %>
+      </div>
+    </li>
+  <% end %>
+  <%= paginate companies %>
+</ul>

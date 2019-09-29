@@ -1,0 +1,16 @@
+<div class="text-center">
+  <h1>所有企業検索フォーム</h1>
+</div>
+<div class="text-center">
+  <%= form_tag companies_path, :method => 'get' do |f| %>
+  
+    <div class="form-group">
+      <%= label :company, '所有企業名' %>
+      <%= text_field_tag :company, params[:company] %>
+    </div>
+    
+    <div><%= submit_tag '検索', :name => nil %></div>
+  <% end %>
+</div>
+
+  <%= render 'companies', companies: @companies %>

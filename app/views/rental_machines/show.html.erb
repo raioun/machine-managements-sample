@@ -1,0 +1,88 @@
+<h1>機材ID：<%= @rental_machine.id %>の詳細ページ</h1>
+<div>
+  <p>機材名：<%= link_to @rental_machine.machine.name, machine_path(@rental_machine.machine) %></p>
+</div>
+<div>
+  <p>型式1：<%= link_to @rental_machine.machine.type1, machine_path(@rental_machine.machine) %></p>
+</div>
+<div>
+  <p>型式2：<%= link_to @rental_machine.machine.type2, machine_path(@rental_machine.machine) %></p>
+</div>
+<div>
+  <p>機番：<%= @rental_machine.code %></p>
+</div>
+<div>
+  <p>在庫状況：
+    <% if @rental_machine.orders.present? %>
+      <%= @rental_machine.orders.order(id: :asc).last.status %>
+    <% else %>
+      <%= '在庫状況：この機材には、出庫履歴がありません。' %>
+    <% end %>
+  </p>
+</div>
+<div>
+  <p>所有企業名：<%= link_to @rental_machine.branch.company.name, company_path(@rental_machine.branch.company) %></p>
+</div>
+<div>
+  <p>所有営業所名：<%= link_to @rental_machine.branch.name, branch_path(@rental_machine.branch) %></p>
+</div>
+<div>
+  <p>所有営業所住所：<%= @rental_machine.branch.address %></p>
+</div>
+<div>
+  <p>保管場所：<%= @rental_machine.storage.company.name %><%= @rental_machine.storage.name %></p>
+</div>
+<div>
+  <p>状態：<%= @rental_machine.status %></p>
+</div>
+<div>
+  <p>備考欄：<%= @rental_machine.remarks %></p>
+</div>
+<div class="button-space">
+  <%= link_to '編集', edit_rental_machine_path(@rental_machine), class: 'btn btn-warning' %>
+</div>
+<div class="button-space">
+  <% if @rental_machine.status == '廃棄済み' %>
+    <p>廃棄済みのため、出庫できません。</p>
+  <% else %>
+    <%= link_to '貸し出す', new_order_path(rental_machine_id: @rental_machine), class: 'btn btn-success' %>
+  <% end %>
+</div>
+<div class ="text-center">
+  <p><%= link_to '機材一覧へ戻る', rental_machines_path %></p>
+</div>
+<div class="text-center">
+  <h1>この機材の案件一覧</h1>
+</div>
+<div class="text-center">
+  <h2>検索フォーム</h2>
+</div>
+
+<% if params[:order].nil? %>
+<%= selected = nil %>
+<%else %>
+<%= selected = params[:order][:status] %>
+<%end%>
+<div class="text-center">
+  <%= form_tag rental_machine_path, :method => 'get' do |f| %>
+  
+    <div class="form-group">
+      <%= label :status, '状態' %>
+      <%= select :order,:status, {予約中: 0, 出庫中: 1, 返却済み: 2},selected:  selected %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :out_date, '出庫日' %>
+      <%= text_field_tag :out_date, params[:out_date] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :in_date, '返却日' %>
+      <%= text_field_tag :in_date, params[:in_date] %>
+    </div>
+    
+    <div><%= submit_tag '検索', :name => nil %></div>
+  <% end %>
+</div>
+
+<%= render 'orders/orders', orders: @orders %>

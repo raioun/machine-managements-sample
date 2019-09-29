@@ -1,0 +1,75 @@
+<div class="text-center">
+  <h1>注文編集</h1>
+</div>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    
+    <%= form_for(@order) do |f| %>
+      <%= render 'layouts/error_messages', model: f.object %>
+      
+        <div class="form-group">
+          <%= f.label :out_date, '出庫日(out_date)' %>
+          <%= f.date_select :out_date, class: 'form-control date_picker' %>
+        </div>
+        
+        <div>
+          <%= f.label :out_time, '出庫時間' %>
+          <%= f.text_field :out_time, class: 'form-control' %>
+        </div>
+        
+        <div class="form-group">
+          <%= f.label :in_date, '入庫日(in_date)' %>
+          <%= f.date_select :in_date, class: 'form-control date_picker' %>
+        </div>
+        
+        <div>
+          <%= f.label :in_time, '入庫時間' %>
+          <%= f.text_field :in_time, class: 'form-control' %>
+        </div>
+      
+        <div class="form-group">
+          <%= f.label :user_id, '応対者名' %>
+          <%= f.collection_select :user_id, User.all, :id, :name, {}, {class: "mySelect2"} %>
+        </div>
+        
+        <div class="form-group">
+          <%= f.label :project_id, '現場名' %>
+          <%= f.collection_select :project_id, Project.all, :id, :project_full_name, {}, {class: "mySelect2"} %>
+        </div>
+        
+        <div class="form-group">
+          <%= f.label :orderer_id, '発注者名' %>
+          <%= f.collection_select :orderer_id, Orderer.all, :id, :orderer_full_name, {}, {class: "mySelect2"} %>
+        </div>
+        
+        <div class="form-group">
+          <%= f.label :rental_machine_id, '機材名' %>
+          <% if params[:rental_machine_id].present? %>
+            <%= f.collection_select :rental_machine_id, RentalMachine.all, :id, :rental_machine_full_name, { selected: params[:rental_machine_id], disabled: true }, {class: "mySelect2"} %>
+          <% else %>
+            <%= f.collection_select :rental_machine_id, RentalMachine.all, :id, :rental_machine_full_name, {}, {class: "mySelect2"} %>
+          <% end %>
+        
+        <div>
+          <%= f.label :remarks, '備考' %>
+          <%= f.text_field :remarks, class: 'form-control' %>
+        </div>
+        
+        <div class="form-group">
+          <%= f.label :status, '状態' %>
+          <%= f.select :status, Order.statuses.keys.to_a, {}, class: 'form-control' %>
+        </div>
+        
+        <%= f.hidden_field :rental_machine_id %>
+        
+      <%= f.submit '登録', class: 'btn btn-success' %>
+    <% end %>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+  $('.mySelect2').select2();
+});
+</script>

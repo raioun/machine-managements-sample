@@ -1,0 +1,65 @@
+<div>
+  <p>顧客企業ID：<%= @customer.id %>の詳細ページ</p>
+</div>
+<div>
+  <p>顧客企業名：<%= @customer.name %></p>
+</div>
+<div>
+  <%= link_to '編集', edit_customer_path(@customer), class: 'btn btn-warning' %>
+</div>
+<div class ="text-center">
+  <p><%= link_to '顧客企業一覧へ戻る', customers_path %></p>
+</div>
+
+<div class="text-center">
+  <h1>この顧客企業の発注者一覧</h1>
+</div>
+<div class="text-center">
+  <h2>検索フォーム</h2>
+</div>
+
+<% if params[:orderer].nil? %>
+<%= selected = nil %>
+<%else %>
+<%= selected = params[:orderer][:status] %>
+<%end%>
+
+<div class="text-center">
+  <%= form_tag customer_path, :method => 'get' do |f| %>
+  
+    <div class="form-group">
+      <%= label :family_name, '発注者名(苗字のみ)' %>
+      <%= text_field_tag :family_name, params[:family_name] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :status, '状態' %>
+      <%= select :orderer,:status, {在籍中: 0, 退社済み: 1},selected:  selected %>
+    </div>
+    
+    <div><%= submit_tag '検索', :name => nil %></div>
+  <% end %>
+</div>
+
+  <%= render 'orderers/orderers', orderers: @orderers %>
+
+<div class="text-center">
+  <h1>この顧客企業の現場一覧</h1>
+</div>
+<div class="text-center">
+  <h2>検索フォーム</h2>
+</div>
+<div class="text-center">
+  <%= form_tag customer_path, :method => 'get' do |f| %>
+  
+    <div class="form-group">
+      <%= label :project, '現場名' %>
+      <%= text_field_tag :project, params[:project] %>
+    </div>
+    
+    <div><%= submit_tag '検索', :name => nil %></div>
+  <% end %>
+</div>
+<div>
+  <%= render 'projects/projects', projects: @projects %>
+</div>

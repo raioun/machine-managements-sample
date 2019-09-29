@@ -1,0 +1,19 @@
+<div>
+  <p>所有企業ID：<%= @company.id %>の詳細ページ</p>
+</div>
+<div>
+  <p>所有企業名：<%= @company.name %></p>
+</div>
+<div>
+  <%= link_to '編集', edit_company_path(@company), class: 'btn btn-warning' %>
+</div>
+<div class ="text-center">
+  <p><%= link_to '顧客企業一覧へ戻る', companies_path %></p>
+</div>
+
+<div class="text-center">
+  <h1>この所有企業の営業所一覧</h1>
+</div>
+<div>
+  <%= render 'branches/branches', branches: @branches %>
+</div>

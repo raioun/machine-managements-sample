@@ -1,0 +1,46 @@
+<ul class="media-list">
+
+  <% rental_machines.each do |rental_machine| %>
+  
+    <li class="media">
+      <div>
+        <p>機材名：<%= link_to rental_machine.machine.name, machine_path(rental_machine.machine) %>/<%= link_to rental_machine.machine.type1, machine_path(rental_machine.machine) %>/<%= link_to rental_machine.machine.type2, machine_path(rental_machine.machine) %></p>
+      </div>
+      <div>
+        <p>機番：<%= rental_machine.code %></p>
+      </div>
+      <div>
+        <p>在庫状況：
+          <% if rental_machine.orders.present? %>
+            <%= rental_machine.orders.order(id: :asc).last.status %>
+          <% else %>
+            <%= '在庫状況：この機材には、出庫履歴がありません。' %>
+          <% end %>
+        </p>
+      </div>
+      <div>
+        <p>所有営業所名：<%= link_to rental_machine.branch.company.name, company_path(rental_machine.branch.company) %><%= link_to rental_machine.branch.name, branch_path(rental_machine.branch) %></p>
+      </div>
+      <div>
+        <p>保管場所：<%= rental_machine.storage.company.name%><%= rental_machine.storage.name %></p>
+      </div>
+      <div>
+        <p>状態：<%= rental_machine.status %></p>
+      </div>
+      <div>
+        <p>備考欄：<%= rental_machine.remarks %></p>
+      </div>
+      <div class="button-space">
+        <%= link_to '詳細', rental_machine_path(rental_machine), class: 'btn btn-primary' %>
+      </div>
+      <div class="button-space">
+        <% if rental_machine.status == '廃棄済み' %>
+          <p>廃棄済みのため、出庫できません。</p>
+        <% else %>
+          <%= link_to '貸し出す', new_order_path(rental_machine_id: rental_machine.id), class: 'btn btn-success' %>
+        <% end %>
+      </div>
+    </li>
+  <% end %>
+  <%= paginate rental_machines %>
+</ul>

@@ -1,0 +1,76 @@
+<div class="text-center">
+  <h1>案件検索フォーム</h1>
+</div>
+<div class="text-center">
+  <%= form_tag orders_path, :method => 'get' do |f| %>
+  
+    <div class="form-group">
+      <%= label :out_date, '出庫日' %>
+      <%= text_field_tag :out_date, params[:out_date] %>
+      <%# <%= text_field_tag :out_date, params[:out_date], pattern: "\y{4}-\m{2}-\d{2}", placeholder: "2019-01-01" %>
+    </div>
+      
+    <div class="form-group">
+      <%= label :in_date, '入庫日' %>
+      <%= text_field_tag :in_date, params[:in_date] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :user, '応対ユーザ名' %>
+      <%= text_field_tag :user, params[:user] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :customer, '顧客企業名' %>
+      <%= text_field_tag :customer, params[:customer] %>
+    </div>
+      
+    <div class="form-group">
+      <%= label :project, '現場名' %>
+      <%= text_field_tag :project, params[:project] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :orderer, '発注者苗字' %>
+      <%= text_field_tag :orderer, params[:orderer] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :machine, '機材名' %>
+      <%= text_field_tag :machine, params[:machine] %>
+    </div>
+      
+    <div class="form-group">
+      <%= label :type1, '型式1' %>
+      <%= text_field_tag :type1, params[:type1] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :type2, '型式2' %>
+      <%= text_field_tag :type2, params[:type2] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :company, '所有企業名' %>
+      <%= text_field_tag :company, params[:company] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :branch, '所有営業所名' %>
+      <%= text_field_tag :branch, params[:branch] %>
+    </div>
+    
+    <div><%= submit_tag '検索', :name => nil %></div>
+  <% end %>
+</div>
+
+<div class="col-xs-6">
+  <ul class="nav nav-tabs nav-justified">
+    <li class="<%= 'active' if current_page?(orders_path) %>"><%= link_to orders_path do %>全ての案件<% end %></li>
+    <li class="<%= 'active' if current_page?(reservations_orders_path) %>"><%= link_to reservations_orders_path do %>予約中の案件<% end %></li>
+    <li class="<%= 'active' if current_page?(uses_orders_path) %>"><%= link_to uses_orders_path do %>出庫中の案件<% end %></li>
+    <li class="<%= 'active' if current_page?(cominghomes_orders_path) %>"><%= link_to cominghomes_orders_path do %>返却済みの案件<% end %></li>
+  </ul>
+  
+  <%= render 'orders', orders: @orders %>
+</div>

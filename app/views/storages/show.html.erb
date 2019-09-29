@@ -1,0 +1,18 @@
+<div>
+  <p>顧客企業名：<%= @storage.company.name %></p>
+</div>
+<div>
+  <p>所有営業所ID：<%= @storage.id %></p>
+</div>
+<div>
+  <p>所有営業所名：<%= @storage.name %></p>
+</div>
+<div>
+  <p>住所：<%= @storage.address %></p>
+</div>
+<div>
+  <%= link_to '編集', edit_storage_path(@storage), class: 'btn btn-warning' %>
+</div>
+<div class ="text-center">
+  <p><%= link_to '保管場所一覧へ戻る', storages_path %></p>
+</div>

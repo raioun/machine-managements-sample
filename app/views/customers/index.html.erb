@@ -1,0 +1,16 @@
+<div class="text-center">
+  <h1>顧客検索フォーム</h1>
+</div>
+<div class="text-center">
+  <%= form_tag customers_path, :method => 'get' do |f| %>
+  
+    <div class="form-group">
+      <%= label :customer, '顧客企業名' %>
+      <%= text_field_tag :customer, params[:customer] %>
+    </div>
+    
+    <div><%= submit_tag "検索", :name => nil %></div>
+  <% end %>
+</div>
+
+  <%= render 'customers', customers: @customers %>

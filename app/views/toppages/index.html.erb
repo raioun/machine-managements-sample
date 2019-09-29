@@ -1,0 +1,51 @@
+<% if logged_in? %>
+  <div  class="text-right">
+    <p>ユーザ名: <%= current_user.name %></p>
+  </div>
+  <div class="text-center">
+    <div class="link">
+      <%= link_to '新規ユーザ登録', 'signup', class: 'btn btn-lg btn-info' %>
+      <%= link_to 'ユーザ一覧', 'users', class: 'btn btn-lg btn-success' %>
+    </div>
+    <div class="link">
+      <%= link_to '新規顧客企業登録', 'customers/new', class: 'btn btn-lg btn-info' %>
+      <%= link_to '顧客企業一覧', 'customers', class: 'btn btn-lg btn-success' %>
+    </div>
+    <div class="link">
+      <%= link_to '新規現場登録', 'projects/new', class: 'btn btn-lg btn-info' %>
+      <%= link_to '現場一覧', 'projects', class: 'btn btn-lg btn-success' %>
+    </div>
+    <div class="link">
+      <%= link_to '新規発注者登録', 'orderers/new', class: 'btn btn-lg btn-info' %>
+      <%= link_to '発注者一覧', 'orderers', class: 'btn btn-lg btn-success' %>
+    </div>
+    <div class="link">
+      <%= link_to '新規所有企業登録', 'companies/new', class: 'btn btn-lg btn-info' %>
+      <%= link_to '所有企業一覧', 'companies', class: 'btn btn-lg btn-success' %>
+    </div>
+    <div class="link">
+      <%= link_to '新規営業所登録', 'branches/new', class: 'btn btn-lg btn-info' %>
+      <%= link_to '営業所一覧', 'branches', class: 'btn btn-lg btn-success' %>
+    </div>
+    <div class="link">
+      <%= link_to '新規機材名登録', 'machines/new', class: 'btn btn-lg btn-info' %>
+      <%= link_to '機材名一覧', 'machines', class: 'btn btn-lg btn-success' %>
+    </div>
+    <div class="link">
+      <%= link_to '新規機材登録', 'rental_machines/new', class: 'btn btn-lg btn-info' %>
+      <%= link_to '機材一覧', 'rental_machines', class: 'btn btn-lg btn-success' %>
+    </div>
+    <div class="link">
+      <%= link_to '案件一覧', 'orders', class: 'btn btn-lg btn-success' %>
+    </div>
+  </div>
+  
+<% else %>
+  <div class="center jumbotron">
+    <div class="text-center">
+      <h1>機材別管理表</h1>
+    </div>
+  </div>
+<% end %>
+
+

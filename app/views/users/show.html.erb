@@ -1,0 +1,52 @@
+<div>
+  <p>ユーザID：<%= @user.id %>の詳細ページ</p>
+</div>
+<div>
+  <p>ユーザ名：<%= @user.name %></p>
+</div>
+<div>
+  <p>状態：<%= @user.status %></p>
+</div>
+<div>
+  <%= link_to '編集', edit_user_path(@user), class: 'btn btn-warning' %>
+</div>
+
+<div class ="text-center">
+  <p><%= link_to 'ユーザ一覧へ戻る', users_path %></p>
+</div>
+
+<div class="text-center">
+  <h1>このユーザが応対している案件一覧</h1>
+</div>
+<div class="text-center">
+  <h2>検索フォーム</h2>
+</div>
+
+<% if params[:order].nil? %>
+<%= selected = nil %>
+<%else %>
+<%= selected = params[:order][:status] %>
+<%end%>
+<div class="text-center">
+  <%= form_tag user_path, :method => 'get' do |f| %>
+  
+    <div class="form-group">
+      <%= label :status, '状態' %>
+      <%= select :order,:status, {予約中: 0, 出庫中: 1, 返却済み: 2},selected:  selected %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :out_date, '出庫日' %>
+      <%= text_field_tag :out_date, params[:out_date] %>
+    </div>
+    
+    <div class="form-group">
+      <%= label :in_date, '返却日' %>
+      <%= text_field_tag :in_date, params[:in_date] %>
+    </div>
+
+    <div><%= submit_tag '検索', :name => nil %></div>
+  <% end %>
+</div>
+
+<%= render 'orders/orders', orders: @orders %>

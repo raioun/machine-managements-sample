@@ -1,0 +1,27 @@
+<div class="text-center">
+  <h1>ユーザ検索フォーム</h1>
+</div>
+
+<% if params[:user].nil? %>
+<%= selected = nil %>
+<%else %>
+<%= selected = params[:user][:status] %>
+<%end%>
+<div class="text-center">
+  <%= form_tag users_path, :method => 'get' do |f| %>
+  
+    <div class="form-group">
+      <%= label :name, 'ユーザ名' %>
+      <%= text_field_tag :name, params[:name] %>
+    </div>
+      
+    <div class="form-group">
+      <%= label :status, '状態' %>
+      <%= select :user,:status, {在籍中: 0, 退社済み: 1},selected:  selected %>
+    </div>
+    
+    <div><%= submit_tag '検索', :name => nil %></div>
+  <% end %>
+</div>
+
+<%= render 'users', users: @users %>

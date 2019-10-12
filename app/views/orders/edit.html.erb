@@ -45,11 +45,11 @@
         
         <div class="form-group">
           <%= f.label :rental_machine_id, '機材名' %>
-          <% if params[:rental_machine_id].present? %>
-            <%= f.collection_select :rental_machine_id, RentalMachine.all, :id, :rental_machine_full_name, { selected: params[:rental_machine_id], disabled: true }, {class: "mySelect2"} %>
-          <% else %>
+          <%# if params[:rental_machine_id].present? %>
+            <%#= f.collection_select :rental_machine_id, RentalMachine.all, :id, :rental_machine_full_name, { selected: params[:rental_machine_id] }, {class: "mySelect2"} %>
+          <%# else %>
             <%= f.collection_select :rental_machine_id, RentalMachine.all, :id, :rental_machine_full_name, {}, {class: "mySelect2"} %>
-          <% end %>
+          <%# end %>
         
         <div>
           <%= f.label :remarks, '備考' %>
@@ -61,7 +61,7 @@
           <%= f.select :status, Order.statuses.keys.to_a, {}, class: 'form-control' %>
         </div>
         
-        <%= f.hidden_field :rental_machine_id %>
+        <%#= f.hidden_field :rental_machine_id %>
         
       <%= f.submit '登録', class: 'btn btn-success' %>
     <% end %>

@@ -3,7 +3,8 @@ class CreateBranches < ActiveRecord::Migration[5.0]
     create_table :branches do |t|
       t.string :name
       t.string :address
-      t.references :company, foreign_key: true
+      # t.references :company, foreign_key: true
+      t.bigint :company_id
 
       t.timestamps
     end

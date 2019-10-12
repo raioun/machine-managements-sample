@@ -2,10 +2,21 @@ class OrdersController < ApplicationController
   before_action :require_user_logged_in
   
   def index
+    # p params[:in_date] = params[:in_date].gsub(/\A(?:\p{Hiragana}|\p{Katakana}|[ー－]|[一-龠々])+\z/, '') if params[:in_date].present?
     p params[:in_date] = params[:in_date].gsub(/\A(?:\p{Hiragana}|[^ -~。-゜]|「|」)+\z/, '') if params[:in_date].present?
+    
+    # p params[:out_date] = params[:out_date].gsub(/\A(?:\p{Hiragana}|\p{Katakana}|[ー－]|[一-龠々])+\z/, '') if params[:out_date].present?
     p params[:out_date] = params[:out_date].gsub(/\A(?:\p{Hiragana}|[^ -~。-゜]|「|」)+\z/, '') if params[:out_date].present?
     
     @orders = Order.all.includes(:user).includes(:project).includes(:orderer).includes(:rental_machine).order('status', 'out_date', 'out_time', 'in_date', 'in_time').page(params[:page])
+    
+    # mysql2の場合は下記を使用
+    # @orders = @orders.where('out_date LIKE?', "%#{params[:out_date]}%") if params[:out_date].present?
+    # @orders = @orders.where('in_date LIKE?', "%#{params[:in_date]}%") if params[:in_date].present?
+    
+    # postgresqlの場合は下記を使用
+    # @orders = @orders.where('CAST(out_date AS text) LIKE ?', "%#{params[:out_date]}%") if params[:out_date].present?
+    # @orders = @orders.where('CAST(in_date AS text) LIKE ?', "%#{params[:in_date]}%") if params[:in_date].present?
     
     if Rails.env.production?
       @orders = @orders.where('CAST(out_date AS text) LIKE ?', "%#{params[:out_date]}%") if params[:out_date].present?
@@ -19,13 +30,14 @@ class OrdersController < ApplicationController
     @orders = @orders.where(user_id: @users.pluck(:id)) if @users
     
     @customers = Customer.where('name LIKE?', "%#{params[:customer]}%") if params[:customer].present?
-    @projects = Project.where(customer_id: @customers.pluck(:id)) if @customers
+    @orderers = Orderer.where(customer_id: @customers.pluck(:id)) if @customers
+    @orders = @orders.where(orderer_id: @orderers.pluck(:id)) if @orderers
     
     @projects = Project.where('name LIKE?', "%#{params[:project]}%") if params[:project].present?
     @orders = @orders.where(project_id: @projects.pluck(:id)) if @projects
     
-    @orderers = Orderer.where('family_name LIKE?', "%#{params[:orderer]}%") if params[:orderer].present?
-    @orders = @orders.where(orderer_id: @orderers.pluck(:id)) if @orderers
+    # @orderers = Orderer.where('family_name LIKE?', "%#{params[:orderer]}%") if params[:orderer].present?
+    # @orders = @orders.where(orderer_id: @orderers.pluck(:id)) if @orderers
     
     @machines = Machine.all
     @rental_machines = RentalMachine.all
@@ -33,9 +45,13 @@ class OrdersController < ApplicationController
     @machines = @machines.where('type1 LIKE?', "%#{params[:type1]}%") if params[:type1].present?
     @machines = @machines.where('type2 LIKE?', "%#{params[:type2]}%") if params[:type2].present?
     @rental_machines = @rental_machines.where(machine_id: @machines.pluck(:id)) if @machines
+    # @orders = @orders.where(rental_machine_id: @rental_machines.pluck(:id)) if @rental_machines
     
     @companies = Company.where('name LIKE?', "%#{params[:company]}%") if params[:company].present?
     @branches = Branch.where(company_id: @companies.pluck(:id)) if @companies
+    # binding.pry
+    # @rental_machines = @rental_machines.where(branch_id: @branches.pluck(:id)) if @branches
+    # @orders = @orders.where(rental_machine_id: @rental_machines.pluck(:id)) if @rental_machines
     
     @branches = Branch.where('name LIKE?', "%#{params[:branch]}%") if params[:branch].present?
     @rental_machines = @rental_machines.where(branch_id: @branches.pluck(:id)) if @branches
@@ -69,7 +85,7 @@ class OrdersController < ApplicationController
 
   def update
     @order = Order.find(params[:id])
-    
+    # binding.pry
     if @order.update(order_params)
       flash[:success] = '案件を編集しました。'
       redirect_to @order
@@ -102,13 +118,14 @@ class OrdersController < ApplicationController
     @reservations = @reservations.where(user_id: @user.pluck(:id)) if @user
 
     @customer = Customer.where('name LIKE?', "%#{params[:customer]}%") if params[:customer].present?
-    @project = Project.where(customer_id: @customer.pluck(:id)) if @customer
+    @orderer = Orderer.where(customer_id: @customer.pluck(:id)) if @customer
+    @reservations = @reservations.where(orderer_id: @orderer.pluck(:id)) if @orderer
     
     @project = Project.where('name LIKE?', "%#{params[:project]}%") if params[:project].present?
     @reservations = @reservations.where(project_id: @project.pluck(:id)) if @project
     
-    @orderer = Orderer.where('family_name LIKE?', "%#{params[:orderer]}%") if params[:orderer].present?
-    @reservations = @reservations.where(orderer_id: @orderer.pluck(:id)) if @orderer
+    # @orderer = Orderer.where('family_name LIKE?', "%#{params[:orderer]}%") if params[:orderer].present?
+    # @reservations = @reservations.where(orderer_id: @orderer.pluck(:id)) if @orderer
     
     @machines = Machine.all
     @rental_machines = RentalMachine.all
@@ -116,10 +133,13 @@ class OrdersController < ApplicationController
     @machines = @machines.where('type1 LIKE?', "%#{params[:type1]}%") if params[:type1].present?
     @machines = @machines.where('type2 LIKE?', "%#{params[:type2]}%") if params[:type2].present?
     @rental_machines = @rental_machines.where(machine_id: @machines.pluck(:id)) if @machines
+    # @reservations = @reservations.where(rental_machine_id: @rental_machines.pluck(:id)) if @rental_machines
     
     @companies = Company.where('name LIKE?', "%#{params[:company]}%") if params[:company].present?
     @branches = Branch.where(company_id: @companies.pluck(:id)) if @companies
-
+    # @rental_machines = @rental_machines.where(branch_id: @branches.pluck(:id)) if @branches
+    # @reservations = @reservations.where(rental_machine_id: @rental_machines.pluck(:id)) if @rental_machines
+    
     @branches = Branch.where('name LIKE?', "%#{params[:branch]}%") if params[:branch].present?
     @rental_machines = @rental_machines.where(branch_id: @branches.pluck(:id)) if @branches
     @reservations = @reservations.where(rental_machine_id: @rental_machines.pluck(:id)) if @rental_machines
@@ -136,13 +156,14 @@ class OrdersController < ApplicationController
     @uses = @uses.where(user_id: @user.pluck(:id)) if @user
     
     @customer = Customer.where('name LIKE?', "%#{params[:customer]}%") if params[:customer].present?
-    @project = Project.where(customer_id: @customer.pluck(:id)) if @customer
-
+    @orderer = Orderer.where(customer_id: @customer.pluck(:id)) if @customer
+    @uses = @uses.where(orderer_id: @orderer.pluck(:id)) if @orderer
+    
     @project = Project.where('name LIKE?', "%#{params[:project]}%") if params[:project].present?
     @uses = @uses.where(project_id: @project.pluck(:id)) if @project
     
-    @orderer = Orderer.where('family_name LIKE?', "%#{params[:orderer]}%") if params[:orderer].present?
-    @uses = @uses.where(orderer_id: @orderer.pluck(:id)) if @orderer
+    # @orderer = Orderer.where('family_name LIKE?', "%#{params[:orderer]}%") if params[:orderer].present?
+    # @uses = @uses.where(orderer_id: @orderer.pluck(:id)) if @orderer
     
     @machines = Machine.all
     @rental_machines = RentalMachine.all
@@ -150,10 +171,13 @@ class OrdersController < ApplicationController
     @machines = @machines.where('type1 LIKE?', "%#{params[:type1]}%") if params[:type1].present?
     @machines = @machines.where('type2 LIKE?', "%#{params[:type2]}%") if params[:type2].present?
     @rental_machines = @rental_machines.where(machine_id: @machines.pluck(:id)) if @machines
-
+    # @uses = @uses.where(rental_machine_id: @rental_machines.pluck(:id)) if @rental_machines
+    
     @companies = Company.where('name LIKE?', "%#{params[:company]}%") if params[:company].present?
     @branches = Branch.where(company_id: @companies.pluck(:id)) if @companies
-
+    # @rental_machines = @rental_machines.where(branch_id: @branches.pluck(:id)) if @branches
+    # @uses = @uses.where(rental_machine_id: @rental_machines.pluck(:id)) if @rental_machines
+    
     @branches = Branch.where('name LIKE?', "%#{params[:branch]}%") if params[:branch].present?
     @rental_machines = @rental_machines.where(branch_id: @branches.pluck(:id)) if @branches
     @uses = @uses.where(rental_machine_id: @rental_machines.pluck(:id)) if @rental_machines
@@ -170,13 +194,14 @@ class OrdersController < ApplicationController
     @cominghomes = @cominghomes.where(user_id: @user.pluck(:id)) if @user
     
     @customer = Customer.where('name LIKE?', "%#{params[:customer]}%") if params[:customer].present?
-    @project = Project.where(customer_id: @customer.pluck(:id)) if @customer
-
+    @orderer = Orderer.where(customer_id: @customer.pluck(:id)) if @customer
+    @cominghomes = @cominghomes.where(orderer_id: @orderer.pluck(:id)) if @orderer
+    
     @project = Project.where('name LIKE?', "%#{params[:project]}%") if params[:project].present?
     @cominghomes = @cominghomes.where(project_id: @project.pluck(:id)) if @project
     
-    @orderer = Orderer.where('family_name LIKE?', "%#{params[:orderer]}%") if params[:orderer].present?
-    @cominghomes = @cominghomes.where(orderer_id: @orderer.pluck(:id)) if @orderer
+    # @orderer = Orderer.where('family_name LIKE?', "%#{params[:orderer]}%") if params[:orderer].present?
+    # @cominghomes = @cominghomes.where(orderer_id: @orderer.pluck(:id)) if @orderer
     
     @machines = Machine.all
     @rental_machines = RentalMachine.all
@@ -184,10 +209,13 @@ class OrdersController < ApplicationController
     @machines = @machines.where('type1 LIKE?', "%#{params[:type1]}%") if params[:type1].present?
     @machines = @machines.where('type2 LIKE?', "%#{params[:type2]}%") if params[:type2].present?
     @rental_machines = @rental_machines.where(machine_id: @machines.pluck(:id)) if @machines
-
+    # @cominghomes = @cominghomes.where(rental_machine_id: @rental_machines.pluck(:id)) if @rental_machines
+    
     @companies = Company.where('name LIKE?', "%#{params[:company]}%") if params[:company].present?
     @branches = Branch.where(company_id: @companies.pluck(:id)) if @companies
-
+    # @rental_machines = @rental_machines.where(branch_id: @branches.pluck(:id)) if @branches
+    # @cominghomes = @cominghomes.where(rental_machine_id: @rental_machines.pluck(:id)) if @rental_machines
+    
     @branches = Branch.where('name LIKE?', "%#{params[:branch]}%") if params[:branch].present?
     @rental_machines = @rental_machines.where(branch_id: @branches.pluck(:id)) if @branches
     @cominghomes = @cominghomes.where(rental_machine_id: @rental_machines.pluck(:id)) if @rental_machines

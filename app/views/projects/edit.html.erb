@@ -28,7 +28,7 @@
           <%= f.select :status, Project.statuses.keys.to_a, {}, class: 'form-control' %>
         </div>
         
-        <%= f.hidden_field :customer_id %>
+        <%#= f.hidden_field :customer_id %>
         
       <%= f.submit '登録', class: 'btn btn-success' %>
     <% end %>

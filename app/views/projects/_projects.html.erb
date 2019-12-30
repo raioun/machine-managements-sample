@@ -2,7 +2,7 @@
   <% projects.each do |project| %>
     <li class="media">
       <div>
-        <p>顧客企業名：<%= link_to project.customer.name, project_path(project.customer) %></p>
+        <p>顧客企業名：<%= link_to project.customer.name, customer_path(project.customer) %></p>
       </div>
       <div>
         <p>現場名：<%= project.name %></p>
